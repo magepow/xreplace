@@ -52,6 +52,8 @@ for pathFile in fileList :
         fileData  = file.read()
         fileData2 = fileData
         for item in dataDict:
+            if pd.isna(item['Find']) == True or pd.isna(item['Replace']) == True:
+                continue
             fileData2 = fileData2.replace(item['Find'], item['Replace'])
 
     # Write the file out again
