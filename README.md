@@ -9,6 +9,8 @@ cd ~
 git clone https://github.com/magepow/xreplace.git
 cd xreplace
 ln -s `pwd`/xreplace.py /usr/bin/xreplace
+
+xreplace
 ```
 *Usage:
 
