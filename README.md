@@ -7,7 +7,7 @@ Login with root user and run commands:
 ```
 cd ~
 git clone https://github.com/magepow/xreplace.git
-cd shopify-tool
+cd xreplace
 ln -s `pwd`/xreplace.py /usr/bin/xreplace
 ```
 *Usage:
