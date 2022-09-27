@@ -1,7 +1,7 @@
 #! /usr/bin/env python3 
 # sudo mkdir -p -m 775 /usr/local/bin
 # sudo ln -s /Volumes/HOCTAP/GIT/GitHub/xreplace/xreplace.py /usr/local/bin/xreplace
-# pip3 install xlrd
+# pip3 install xlrd==1.2.0
 # pip3 install pandas
 # pip3 install openpyxl
 # pip3 install python-dotenv
