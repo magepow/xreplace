@@ -25,53 +25,79 @@ regexExcel = os.getenv('FILE_REGEX')
 if not os.path.exists(regexExcel) :
    regexExcel   = SCRIPTPATH + '/' + regexExcel
 
-xlsx = pd.ExcelFile(regexExcel)
-sheetName = xlsx.sheet_names
-fieldset  = 'column'
-if 'Find' in sheetName and 'Replace' in sheetName :
-    fieldset = 'sheet'
+class xreplace:
 
-if fieldset == 'sheet' :
-    findSheet    = xlsx.parse('Find')
-    # findData     = findSheet.to_dict('records')
-    replaceSheet = xlsx.parse('Replace')
-    # replaceData  = replaceSheet.to_dict('records')
-    dataframe = pd.concat([findSheet, replaceSheet], axis=1)
+    def __init__(self):
+        xlsx = pd.ExcelFile(regexExcel)
+        sheetName = xlsx.sheet_names
+        fieldset  = ''
+        if 'Find' in sheetName and 'Replace' in sheetName :
+            fieldset = 'Sheet'
+            findSheet    = xlsx.parse('Find')
+            # findData     = findSheet.to_dict('records')
+            replaceSheet = xlsx.parse('Replace')
+            # replaceData  = replaceSheet.to_dict('records')
+            dataframe = pd.concat([findSheet, replaceSheet], axis=1)
+            dataDict  = dataframe.to_dict('records')
+            self.findAndReplace(dataDict, fieldset)
 
-else :
-    dataframe = pd.read_excel(regexExcel)
+        if 'Yreplace' in sheetName :
+            fieldset  = 'Yreplace'
+            dataframe = xlsx.parse('Yreplace', header=None)
+            dataList  = dataframe.to_dict('list')
+            dataDict  = []
+            for item in dataList:
+                values  = dataList[item]
+                cleanedList = [x for x in values if str(x) != 'nan']
+                if len(cleanedList) > 1 :
+                    dataDict.append({ 'Find': cleanedList[0], 'Replace': cleanedList[1] })
+            self.findAndReplace(dataDict, fieldset)
 
-dataDict = dataframe.to_dict('records')
-# for item in dataDict:
-#     for x in item:
-#         print(f"key: {x}, value: {item[x]}")
+        if 'Xreplace' in sheetName :
+            fieldset = 'Xreplace'
+            dataframe = xlsx.parse('Xreplace')
+            dataDict = dataframe.to_dict('records')
+            self.findAndReplace(dataDict, fieldset)
 
-fileList = []
-for root, dirs, files in os.walk(CURRENTDIR):
-    for file in files:
-        # print(os.path.basename(regexExcel))
-        #append the file name to the list
-        # print(os.path.join(root,file))
-        fileName, fileExt = os.path.splitext(file)
-        if fileExt in extList:
-            if file[0] != '.' and file != os.path.basename(regexExcel):
-                fileList.append(os.path.join(root,file))
+        if fieldset == '':
+            # parse with parame will return frist sheet
+            dataframe = xlsx.parse()
+            dataDict = dataframe.to_dict('records')
+            self.findAndReplace(dataDict)
 
-totalModified = 0
-for pathFile in fileList :
-    with open(pathFile, 'r') as file :
-        fileData  = file.read()
-        fileData2 = fileData
-        for item in dataDict:
-            if pd.isna(item['Find']) == True or pd.isna(item['Replace']) == True:
-                continue
-            fileData2 = fileData2.replace(item['Find'], item['Replace'])
+    def findAndReplace(self, dataDict, fieldset):
+        # for item in dataDict:
+        #     for x in item:
+        #         print(f"key: {x}, value: {item[x]}")
 
-    # Write the file out again
-    if fileData != fileData2 :
-        with open(pathFile, 'w') as file2:
-            file2.write(fileData2)
-            print(f"File {pathFile} modified!")
-            totalModified = totalModified + 1
+        fileList = []
+        for root, dirs, files in os.walk(CURRENTDIR):
+            for file in files:
+                # print(os.path.basename(regexExcel))
+                #append the file name to the list
+                # print(os.path.join(root,file))
+                fileName, fileExt = os.path.splitext(file)
+                if fileExt in extList:
+                    if file[0] != '.' and file != os.path.basename(regexExcel):
+                        fileList.append(os.path.join(root,file))
 
-print(f"Total files modified: {totalModified}")
+        totalModified = 0
+        for pathFile in fileList :
+            with open(pathFile, 'r') as file :
+                fileData  = file.read()
+                fileData2 = fileData
+                for item in dataDict:
+                    if pd.isna(item['Find']) == True or pd.isna(item['Replace']) == True:
+                        continue
+                    fileData2 = fileData2.replace(item['Find'], item['Replace'])
+
+            # Write the file out again
+            if fileData != fileData2 :
+                with open(pathFile, 'w') as file2:
+                    file2.write(fileData2)
+                    print(f"File {pathFile} modified!")
+                    totalModified = totalModified + 1
+
+        print(f"Total {fieldset} files modified: {totalModified}")
+
+xreplace()
