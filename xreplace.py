@@ -26,11 +26,22 @@ if not os.path.exists(regexExcel) :
    regexExcel   = SCRIPTPATH + '/' + regexExcel
 
 xlsx = pd.ExcelFile(regexExcel)
-# print( xlsx.sheet_names)
+sheetName = xlsx.sheet_names
+fieldset  = 'column'
+if 'Find' in sheetName and 'Replace' in sheetName :
+    fieldset = 'sheet'
 
-dataframe = pd.read_excel(regexExcel)
+if fieldset == 'sheet' :
+    findSheet    = xlsx.parse('Find')
+    # findData     = findSheet.to_dict('records')
+    replaceSheet = xlsx.parse('Replace')
+    # replaceData  = replaceSheet.to_dict('records')
+    dataframe = pd.concat([findSheet, replaceSheet], axis=1)
+
+else :
+    dataframe = pd.read_excel(regexExcel)
+
 dataDict = dataframe.to_dict('records')
-
 # for item in dataDict:
 #     for x in item:
 #         print(f"key: {x}, value: {item[x]}")
