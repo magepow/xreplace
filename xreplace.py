@@ -11,6 +11,7 @@ import os
 from dotenv import load_dotenv
 import openpyxl
 import pandas as pd
+import xml.etree.ElementTree as ET
 
 SCRIPTNAME = __file__
 SCRIPT     = os.readlink(SCRIPTNAME);
@@ -21,14 +22,31 @@ if not os.path.exists(FILE_ENV) :
     FILE_ENV   = SCRIPTPATH + '/.env'
 load_dotenv(FILE_ENV) 
 extList    = os.getenv('FILE_EXTENSION').split(' ')
-regexExcel = os.getenv('FILE_REGEX')
-if not os.path.exists(regexExcel) :
-   regexExcel   = SCRIPTPATH + '/' + regexExcel
+fileRegex = os.getenv('FILE_REGEX')
+if not os.path.exists(fileRegex) :
+   fileRegex   = SCRIPTPATH + '/' + fileRegex
 
 class xreplace:
 
     def __init__(self):
-        xlsx = pd.ExcelFile(regexExcel)
+        if fileRegex.endswith('.xml'):
+            self.xreplaceFromXML()
+        if fileRegex.endswith('.xlsx'):
+            self.xreplaceFromExcel()
+
+    def xreplaceFromXML(self):
+        tree = ET.parse(fileRegex)
+        root = tree.getroot()
+        dataDict  = []
+        for item in root:
+            findValue    = item.find('find').text
+            replaceValue = item.find('replace').text
+            dataDict.append({ 'Find': findValue, 'Replace': replaceValue })
+        self.findAndReplace(dataDict)
+
+    def xreplaceFromExcel(self):
+
+        xlsx = pd.ExcelFile(fileRegex)
         sheetName = xlsx.sheet_names
         fieldset  = ''
         if 'Find' in sheetName and 'Replace' in sheetName :
@@ -65,7 +83,7 @@ class xreplace:
             dataDict = dataframe.to_dict('records')
             self.findAndReplace(dataDict)
 
-    def findAndReplace(self, dataDict, fieldset):
+    def findAndReplace(self, dataDict, fieldset=''):
         # for item in dataDict:
         #     for x in item:
         #         print(f"key: {x}, value: {item[x]}")
@@ -73,12 +91,12 @@ class xreplace:
         fileList = []
         for root, dirs, files in os.walk(CURRENTDIR):
             for file in files:
-                # print(os.path.basename(regexExcel))
+                # print(os.path.basename(fileRegex))
                 #append the file name to the list
                 # print(os.path.join(root,file))
                 fileName, fileExt = os.path.splitext(file)
                 if fileExt in extList:
-                    if file[0] != '.' and file != os.path.basename(regexExcel):
+                    if file[0] != '.' and file != os.path.basename(fileRegex):
                         fileList.append(os.path.join(root,file))
 
         totalModified = 0

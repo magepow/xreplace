@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<item>
+		<find>
+			<![CDATA[Find Content 1]]>
+		</find>
+		<replace>
+			<![CDATA[Replact with Content 1]]>
+		</replace>
+	</item>
+	<item>
+		<find>
+			<![CDATA[Find Content 2]]>
+		</find>
+		<replace>
+			<![CDATA[Replact with Content 1]]>
+		</replace>
+	</item>
+</root>
