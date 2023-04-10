@@ -8,6 +8,7 @@
 
 
 import os
+import sys
 from dotenv import load_dotenv
 import openpyxl
 import pandas as pd
@@ -23,6 +24,10 @@ if not os.path.exists(FILE_ENV) :
 load_dotenv(FILE_ENV) 
 extList    = os.getenv('FILE_EXTENSION').split(' ')
 fileRegex = os.getenv('FILE_REGEX')
+
+if len(sys.argv) >= 2 and sys.argv[1] :
+    fileRegex = sys.argv[1];
+
 if not os.path.exists(fileRegex) :
    fileRegex   = SCRIPTPATH + '/' + fileRegex
 
@@ -42,6 +47,7 @@ class xreplace:
             findValue    = item.find('find').text
             replaceValue = item.find('replace').text
             dataDict.append({ 'Find': findValue, 'Replace': replaceValue })
+        print(dataDict)
         self.findAndReplace(dataDict)
 
     def xreplaceFromExcel(self):
