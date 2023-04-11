@@ -47,7 +47,6 @@ class xreplace:
             findValue    = item.find('find').text
             replaceValue = item.find('replace').text
             dataDict.append({ 'Find': findValue, 'Replace': replaceValue })
-        print(dataDict)
         self.findAndReplace(dataDict)
 
     def xreplaceFromExcel(self):
