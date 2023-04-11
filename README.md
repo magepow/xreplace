@@ -7,6 +7,13 @@
 Login with root user and run commands:
 
 ```
+Requirement
+pip3 install xlrd==1.2.0
+pip3 install pandas
+pip3 install openpyxl
+pip3 install python-dotenv
+
+
 cd ~
 git clone https://github.com/magepow/xreplace.git
 cd xreplace
