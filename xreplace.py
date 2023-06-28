@@ -54,6 +54,14 @@ class xreplace:
         xlsx = pd.ExcelFile(fileRegex)
         sheetName = xlsx.sheet_names
         fieldset  = ''
+        if 'File' in sheetName :
+            fieldset  = 'File'
+            dataframe = xlsx.parse(fieldset, header=None)
+            dataList  = dataframe.to_dict('list')
+            dataDict  = []
+            for item in dataList:
+                extList  = dataList[item]
+
         if 'Find' in sheetName and 'Replace' in sheetName :
             fieldset = 'Sheet'
             findSheet    = xlsx.parse('Find')
@@ -66,7 +74,7 @@ class xreplace:
 
         if 'Yreplace' in sheetName :
             fieldset  = 'Yreplace'
-            dataframe = xlsx.parse('Yreplace', header=None)
+            dataframe = xlsx.parse(fieldset, header=None)
             dataList  = dataframe.to_dict('list')
             dataDict  = []
             for item in dataList:
@@ -78,7 +86,7 @@ class xreplace:
 
         if 'Xreplace' in sheetName :
             fieldset = 'Xreplace'
-            dataframe = xlsx.parse('Xreplace')
+            dataframe = xlsx.parse(fieldset)
             dataDict = dataframe.to_dict('records')
             self.findAndReplace(dataDict, fieldset)
 
