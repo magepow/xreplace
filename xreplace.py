@@ -118,9 +118,14 @@ class xreplace:
                 fileData  = file.read()
                 fileData2 = fileData
                 for item in dataDict:
-                    if pd.isna(item['Find']) == True or pd.isna(item['Replace']) == True:
+                    findX = item['Find']
+                    replaceX = item['Replace']
+                    if pd.isna(findX) == True:
                         continue
-                    fileData2 = fileData2.replace(item['Find'], item['Replace'])
+                    if(pd.isna(replaceX) == True):
+                        replaceX = ""
+                        print(f"{findX} delete!")
+                    fileData2 = fileData2.replace(findX, replaceX)
 
             # Write the file out again
             if fileData != fileData2 :
