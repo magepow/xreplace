@@ -8,10 +8,11 @@ Login with root user and run commands:
 
 ```
 Requirement
-pip install xlrd==1.2.0
-pip install pandas
-pip install openpyxl
-pip install python-dotenv
+dnf install python3-pip
+pip3 install xlrd==1.2.0
+pip3 install pandas
+pip3 install openpyxl
+pip3 install python-dotenv
 
 
 cd ~
