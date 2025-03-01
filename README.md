@@ -30,3 +30,11 @@ xreplace
     Col "Replace" replace content in "Find"
   
 note: You can change file and extension file find and replace in file .env
+
+*Command
+  ```
+      # Use default file xreplace.xlsx
+      xreplace
+      # Or special path file
+      xreplace ./xreplace_8.xlsx
+  ```
